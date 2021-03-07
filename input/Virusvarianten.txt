@@ -1,0 +1,8 @@
+KW,Testanzahl,B_1_1_7,B_1_351,P_1
+KW2,49,1,0,0
+KW3,
+KW4,
+KW5,
+KW6,
+KW7,
+KW8,
