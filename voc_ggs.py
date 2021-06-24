@@ -47,8 +47,8 @@ pfad_input = "Github\\Auswertung_Covid_19\\input\\"
 name_performance = 'Dataframes\\df_performance.csv'
 
 name_1 = "GGS plot 1 alle voc Anteil.png"
-name_2 = "GGS plot 1 voc ohne alpha Anteil.png"
-name_3 = "GGS plot 1 voc ohne alpha abs Zahlen.png"
+name_2 = "GGS plot 2 voc ohne alpha Anteil.png"
+name_3 = "GGS plot 3 voc ohne alpha abs Zahlen.png"
 
 # Webabruf - CSV einlesen
 data = pd.read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
@@ -211,8 +211,6 @@ print(f'max_height_abs = {max_height_abs}')
 plt.figure(figsize=(h, v * 1.22))
 plt.style.use('seaborn')
 
-# w = 0.40
-
 x = df_VOC["KW"].tolist()
 bar1 = np.arange(len(x))
 
@@ -252,7 +250,11 @@ plt.legend(loc='upper center',
            ncol=2,
            fontsize=size)
 
-plt.text(x=AnzahlWochen, y=max_height_abs, s="text")
+# hintergrund einfärben und Hinweistext
+plt.axvspan(AnzahlWochen-AnzahlWochen*0.07, AnzahlWochen, facecolor='grey', alpha=0.7)
+plt.text(x=AnzahlWochen-AnzahlWochen*0.08, y=0.97*max_height_abs, s=" Daten nicht\n vollständig", fontsize=size*0.8,
+         horizontalalignment='right', rotation=0,
+         bbox={'facecolor': "grey", 'alpha': 0.7, 'pad': 5})
 
 # Diagramm als Bild exporieren und Auflösung definieren
 plt.savefig(Laufwerk + pfad_output + name_3, dpi=dpi, bbox_inches='tight')
