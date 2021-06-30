@@ -8,6 +8,7 @@ from datetime import date  # todays date
 
 ########################################################################################################################
 import os
+
 print('__file__:    ', __file__)
 print('basename:    ', os.path.basename(__file__))
 print('dirname:     ', os.path.dirname(__file__))
@@ -49,6 +50,7 @@ name_performance = 'Dataframes\\df_performance.csv'
 name_1 = "GGS plot 1 alle voc Anteil.png"
 name_2 = "GGS plot 2 voc ohne alpha Anteil.png"
 name_3 = "GGS plot 3 voc ohne alpha abs Zahlen.png"
+name_4 = "GGS plot 1 alle voc abs Zahlen.png"
 
 # Webabruf - CSV einlesen
 data = pd.read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
@@ -251,9 +253,10 @@ plt.legend(loc='upper center',
            fontsize=size)
 
 # hintergrund einfärben und Hinweistext
-plt.axvspan(AnzahlWochen-AnzahlWochen*0.07, AnzahlWochen, facecolor='grey', alpha=0.7)
-plt.text(x=AnzahlWochen-AnzahlWochen*0.08, y=0.97*max_height_abs, s=" Daten nicht\n vollständig", fontsize=size*0.8,
-         horizontalalignment='right', rotation=0,
+plt.axvspan(AnzahlWochen - AnzahlWochen * 0.07, AnzahlWochen, facecolor='grey', alpha=0.7)
+plt.text(x=AnzahlWochen - AnzahlWochen * 0.08, y=0.97 * max_height_abs, s=" Daten nicht\n vollständig",
+         fontsize=size * 0.8,
+         horizontalalignment='left', rotation=0, color="white",
          bbox={'facecolor': "grey", 'alpha': 0.7, 'pad': 5})
 
 # Diagramm als Bild exporieren und Auflösung definieren
@@ -261,6 +264,76 @@ plt.savefig(Laufwerk + pfad_output + name_3, dpi=dpi, bbox_inches='tight')
 plt.savefig(Laufwerk + pfad_onedrive + name_3, dpi=dpi, bbox_inches='tight')
 
 # plt.show()
+
+
+#######################################################################################################################
+# plot 2 voc ohne alpha - abs Zahlen
+#######################################################################################################################
+
+# y-achse finde die MAX höhe
+df_VOC["alleVOC"] = df_VOC["B_1_1_7"] + df_VOC["B_1_617"] + df_VOC["B_1_351"] + df_VOC["P_1"]
+max_height_abs = round(df_VOC["alleVOC"].max(), 0)
+
+#######################################################################################################################
+
+
+plt.figure(figsize=(h, v * 1.22))
+plt.style.use('seaborn')
+
+x = df_VOC["KW"].tolist()
+bar1 = np.arange(len(x))
+
+p32 = plt.bar(x=bar1, height=df_VOC["B_1_617"], width=0.4,
+              align='center', color="red",
+              label="Delta - B.1.617 (Indien)")
+
+p31 = plt.bar(x=bar1, height=df_VOC["B_1_1_7"], width=0.4,
+              align='center', color="blue",
+              bottom=np.array(df_VOC["B_1_617"]),
+              label="Alpha - B.1.1.7 (Großbritannien)")
+
+p33 = plt.bar(x=bar1, height=df_VOC["B_1_351"], width=0.4,
+              align='center', color="black",
+              bottom=np.array(np.array(df_VOC["B_1_1_7"]) + np.array(df_VOC["B_1_617"])),
+              label="Beta - B.1.351 (Südafrika)")
+
+p34 = plt.bar(x=bar1, height=df_VOC["P_1"], width=0.4,
+              align='center', color="yellow",
+              bottom=np.array(np.array(df_VOC["B_1_1_7"]) + np.array(df_VOC["B_1_617"]) + np.array(df_VOC["B_1_351"])),
+              label="Gamma - P.1 (Amazonas)")
+
+# # Schriftgrößen x und y achsenwerte
+plt.xticks(bar1, x, fontsize=size - 5, rotation=45)
+plt.yticks(fontsize=size - 4)
+
+# plt.yticks(np.arange(0, max_height_abs + max_height_abs / 10, round(max_height_abs / 10, 0)))
+
+plt.ylabel('Virusvarianten - Absolute Zahlen', fontsize=size)
+plt.xlabel('Zeit', fontsize=size, rotation=0)
+
+plt.title('Deutschland: "Variants of Concern" RKI-Gesamtgenomsequenzierung\n', fontsize=size)
+plt.suptitle(today + ' PW', fontsize=size - 5, y=0.91)
+
+plt.legend(loc='upper center',
+           bbox_to_anchor=(0.5, -0.15),
+           fancybox=True,
+           shadow=True,
+           ncol=2,
+           fontsize=size)
+
+# hintergrund einfärben und Hinweistext
+plt.axvspan(AnzahlWochen - AnzahlWochen * 0.07, AnzahlWochen, facecolor='grey', alpha=0.7)
+plt.text(x=AnzahlWochen - AnzahlWochen * 0.08, y=0.97 * max_height_abs, s=" Daten nicht\n vollständig",
+         fontsize=size * 0.8,
+         horizontalalignment='left', rotation=0, color="white",
+         bbox={'facecolor': "grey", 'alpha': 0.7, 'pad': 5})
+
+# Diagramm als Bild exporieren und Auflösung definieren
+plt.savefig(Laufwerk + pfad_output + name_4, dpi=dpi, bbox_inches='tight')  # ToDo: Pfad
+plt.savefig(Laufwerk + pfad_onedrive + name_4, dpi=dpi, bbox_inches='tight')
+
+# plt.show()
+
 
 #######################################################################################################################
 # performance
