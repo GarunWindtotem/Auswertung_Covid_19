@@ -9,7 +9,7 @@ import divi
 exec(open("./impfungen.py").read())
 exec(open("./positivenquote.py").read())
 exec(open("./voc.py").read())
-exec(open("./who.py").read())
+exec(open("02 who.py").read())
 exec(open("./world.py").read())
 exec(open("./divi.py").read())
 
