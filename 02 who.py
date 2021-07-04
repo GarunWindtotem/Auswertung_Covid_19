@@ -53,6 +53,15 @@ dpi = 200
 
 
 #
+
+
+# Webabruf - CSV einlesen
+data = pd.read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+data = data.drop(columns=['Country_code', 'WHO_region', 'Cumulative_deaths'])
+data['Date_reported'] = pd.to_datetime(data.Date_reported, utc=True)
+data = data.loc[data.Date_reported >= ts, :]
+data = data[data.New_cases != 0]
+
 # dictCountries = {
 #     "0": "Germany",
 #     "1": "France",
@@ -72,14 +81,6 @@ dpi = 200
 #     "15": "Russian Federation",
 #     "16": "Estonia"
 # }
-
-# Webabruf - CSV einlesen
-data = pd.read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
-data = data.drop(columns=['Country_code', 'WHO_region', 'Cumulative_deaths'])
-data['Date_reported'] = pd.to_datetime(data.Date_reported, utc=True)
-data = data.loc[data.Date_reported >= ts, :]
-data = data[data.New_cases != 0]
-
 
 # get list of all countries
 listCountries = data["Country"].unique()
