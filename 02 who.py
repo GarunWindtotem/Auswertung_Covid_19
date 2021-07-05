@@ -100,12 +100,19 @@ def create_df(i):
     df['MSTD_cases'] = df['New_cases'].rolling(window=7, min_periods=1).std()
     df['OTG_cases'] = df['MA'] + df['MSTD_cases']
     df['UTG_cases'] = df['MA'] - df['MSTD_cases']
+
+    df['MA_d'] = df['New_deaths'].rolling(window=7, min_periods=1).mean()
+    df['MSTD_deaths'] = df['New_deaths'].rolling(window=7, min_periods=1).std()
+    df['OTG_deaths'] = df['MA_d'] + df['MSTD_deaths']
+    df['UTG_deaths'] = df['MA_d'] - df['MSTD_deaths']
     # df.to_csv(f'{Laufwerk}{pfad_output} df_{dictCountries[i]}.csv')
-    chart(df, name_country)
-    return df, name_country
+    number_cases = str(round(df["MA"].iloc[-1], 0))
+    chart_cases(df, name_country, number_cases)
+    # chart_deaths(df, name_country)
+    return df, name_country, number_cases
 
 
-def chart(df, name_country):
+def chart_cases(df, name_country, number_cases):
     def y_axis_thousands(x, pos):
         # 'The two args are the value and tick position'
         return '{:0,d}'.format(int(x)).replace(",", ".")
@@ -139,7 +146,44 @@ def chart(df, name_country):
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
     # Diagramm als Bild exporieren und Auflösung definieren
-    plt.savefig(Laufwerk + pfad_output + "plot cases " + name_country + ".png", dpi=dpi, bbox_inches='tight')
+    plt.savefig(Laufwerk + pfad_output + number_cases + " cases " + name_country + ".png", dpi=dpi, bbox_inches='tight')
+
+
+def chart_deaths(df, name_country):
+    def y_axis_thousands(x, pos):
+        # 'The two args are the value and tick position'
+        return '{:0,d}'.format(int(x)).replace(",", ".")
+
+    formatter = FuncFormatter(y_axis_thousands)
+    plt.style.use('seaborn')
+    fig, ax = plt.subplots(figsize=(h, v * 1.2))
+    ax.yaxis.set_major_formatter(formatter)
+    # Neue Fälle pro Tag pro 100.000 Einwohner - 02.12.2020
+    ax1 = plt.plot(df.Date_reported, df['New_deaths'], marker='.', linestyle='', color="blue", markersize=20)
+    ax2 = plt.plot(df.Date_reported, df['MA_d'], color="black", linestyle='solid', linewidth=lwb,
+                   label=f'{name_country}\n(7-Tage Mittel)')
+    plt.legend(loc='upper center',
+               bbox_to_anchor=(0.5, -0.1),
+               fancybox=True,
+               shadow=True,
+               ncol=3,
+               fontsize=size)
+    # Schriftgrößen x und y achsenwerte
+    plt.xticks(fontsize=size - 10, rotation=0)
+    plt.yticks(fontsize=size - 4)
+    plt.ylabel('Neue Todesfälle', fontsize=size)
+    plt.xlabel('Zeit', fontsize=size)
+    plt.title(f'Neue Todesfälle pro Tag - {name_country} (WHO-Daten)\n', fontsize=size + 10)
+    plt.suptitle(today + ' PW', fontsize=size - 5, y=0.92)
+    # fill area between lines
+    plt.fill_between(df.Date_reported, df['OTG_deaths'], df['UTG_deaths'], color='grey', alpha=0.5)
+    ax.set_ylim(ymin=0)
+    locator = mdates.AutoDateLocator(minticks=minticks, maxticks=maxticks)
+    formatter = mdates.ConciseDateFormatter(locator)
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_formatter(formatter)
+    # Diagramm als Bild exporieren und Auflösung definieren
+    plt.savefig(Laufwerk + pfad_output + "plot deaths " + name_country + ".png", dpi=dpi, bbox_inches='tight')
 
 
 for i in dictCountries:
