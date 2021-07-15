@@ -32,8 +32,8 @@ def days_between(d1, d2):
 
 
 a = str(date.today().strftime("%Y-%m-%d"))
-tage = days_between(a, "2020-03-01")
-# tage = days_between(a, "2021-06-15")
+# tage = days_between(a, "2020-03-01")
+tage = days_between(a, "2021-06-15")
 
 ts_x = str(datetime.today() - timedelta(tage))
 ts = pd.to_datetime(ts_x, utc=True)
@@ -62,31 +62,31 @@ data['Date_reported'] = pd.to_datetime(data.Date_reported, utc=True)
 data = data.loc[data.Date_reported >= ts, :]
 data = data[data.New_cases != 0]
 
-# dictCountries = {
-#     "0": "Germany",
-#     "1": "France",
+dictCountries = {
+    "0": "Germany",
+    "1": "France",
 #     "2": "Austria",
 #     "3": "Poland",
 #     "4": "Czechia",
 #     "5": "Switzerland",
 #     "6": "India",
-#     "7": "Italy",
-#     "8": "Spain",
-#     "9": "The United Kingdom",
-#     "10": "Israel",
+    "7": "Italy",
+    "8": "Spain",
+    "9": "The United Kingdom",
+    "10": "Israel",
 #     "11": "Sweden",
 #     "12": "United States of America",
-#     "13": "Spain",
-#     "14": "Italy",
+    "13": "Spain",
+    "14": "Italy",
 #     "15": "Russian Federation",
 #     "16": "Estonia"
-# }
-
-# get list of all countries
-listCountries = data["Country"].unique()
-# create dict out of list
-dictCountries = {i: listCountries[i] for i in range(0, len(listCountries))}
-# print(dictCountries)
+}
+#
+# # get list of all countries
+# listCountries = data["Country"].unique()
+# # create dict out of list
+# dictCountries = {i: listCountries[i] for i in range(0, len(listCountries))}
+# # print(dictCountries)
 
 
 # Dataframes erzeugen
@@ -121,6 +121,7 @@ def chart_cases(df, name_country, number_cases):
     plt.style.use('seaborn')
     fig, ax = plt.subplots(figsize=(h, v * 1.2))
     ax.yaxis.set_major_formatter(formatter)
+
     # Neue Fälle pro Tag pro 100.000 Einwohner - 02.12.2020
     ax1 = plt.plot(df.Date_reported, df['New_cases'], marker='.', linestyle='', color="blue", markersize=20)
     ax2 = plt.plot(df.Date_reported, df['MA'], color="black", linestyle='solid', linewidth=lwb,

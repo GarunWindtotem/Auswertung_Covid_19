@@ -12,7 +12,7 @@ now = datetime.now()
 Laufwerk = "D:\\"
 name_output_df = 'Dataframes\\data_WHO_data.csv'
 
-pfad_output = "Github\\Auswertung_Covid_19\\output\\TwinAxis\\"
+pfad_output = "Github\\Auswertung_Covid_19\\output\\"
 # pfad_onedrive = "OneDrive\\Auswertung_Covid_19\\"
 pfad_input = "Github\\Auswertung_Covid_19\\input\\"
 
@@ -32,8 +32,8 @@ def days_between(d1, d2):
 
 
 a = str(date.today().strftime("%Y-%m-%d"))
-tage = days_between(a, "2020-03-01")
-# tage = days_between(a, "2021-06-15")
+# tage = days_between(a, "2020-03-01")
+tage = days_between(a, "2021-06-15")
 
 ts_x = str(datetime.today() - timedelta(tage))
 ts = pd.to_datetime(ts_x, utc=True)
@@ -42,7 +42,7 @@ ts = pd.to_datetime(ts_x, utc=True)
 lws = 3
 lwb = 7
 # Bezugsschriftgröße
-size = 20
+size = 30
 
 # output größe der bilder
 h = 16
@@ -62,8 +62,8 @@ data = data.loc[data.Date_reported >= ts, :]
 data = data[data.New_cases != 0]
 
 # dictCountries = {
-#     "0": "Germany",
-#     "1": "France",
+#     # "0": "Germany",
+#     # "1": "France",
 #     # "2": "Austria",
 #     # "3": "Poland",
 #     # "4": "Czechia",
@@ -71,13 +71,13 @@ data = data[data.New_cases != 0]
 #     # "6": "India",
 #     # "7": "Italy",
 #     # "8": "Spain",
-#     "9": "The United Kingdom",
+#     # "9": "The United Kingdom",
 #     # "10": "Israel",
 #     # "11": "Sweden",
 #     # "12": "United States of America",
 #     # "13": "Spain",
 #     # "14": "Italy",
-#     "15": "Russian Federation"
+#     # "15": "Russian Federation",
 #     # "16": "Estonia"
 # }
 
@@ -115,7 +115,6 @@ def create_df(i):
 
     number_cases = str(round(df["MA"].iloc[-1], 0))
     chart_cases(df, name_country, number_cases, factor_cases_deaths)
-    # chart_deaths(df, name_country)
     return df, name_country, number_cases, factor_cases_deaths
 
 
@@ -124,7 +123,7 @@ def chart_cases(df, name_country, number_cases, factor_cases_deaths):
         # 'The two args are the value and tick position'
         return '{:0,d}'.format(int(x)).replace(",", ".")
     plt.style.use('seaborn')
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(h, v))
     formatter = FuncFormatter(y_axis_thousands)
     ax.yaxis.set_major_formatter(formatter)
 
@@ -133,26 +132,40 @@ def chart_cases(df, name_country, number_cases, factor_cases_deaths):
     # ax.xaxis.set_major_locator(locator)
     # ax.xaxis.set_major_formatter(formatter)
 
-    ax.plot(df.Date_reported, df['MA'], color="black", marker="", linestyle="solid", label="cases (7-Tage Mittel)")
+    plt.plot(df.Date_reported, df['New_cases'], color="black", alpha=0.7, marker=".", markersize=size*0.5, linestyle="", label="cases")
+    plt.plot(df.Date_reported, df['MA'], color="black", marker="", linestyle="solid", label="cases (7-Tage Mittel)")
+
     ax.set_xlabel("time", fontsize=size)
     ax.set_ylabel("cases", color="black", fontsize=size)
+
+    ax.tick_params(labelsize=size * 0.5)
+
     plt.legend(loc='upper right',
                bbox_to_anchor=(0.5, -0.15),
                fancybox=True,
                shadow=True,
-               ncol=2,
+               ncol=1,
                fontsize=size)
+
     # twin object for two different y-axis on the sample plot
     ax2 = ax.twinx()
-    ax2.yaxis.set_major_formatter(formatter)
     ax2.grid(None)
-    # locator = mdates.AutoDateLocator(minticks=minticks, maxticks=maxticks)
-    # formatter = mdates.ConciseDateFormatter(locator)
-    # ax.xaxis.set_major_locator(locator)
-    # ax.xaxis.set_major_formatter(formatter)
+
+    locator = mdates.AutoDateLocator(minticks=minticks, maxticks=maxticks)
+    formatter = mdates.ConciseDateFormatter(locator)
+    ax2.xaxis.set_major_locator(locator)
+    ax2.xaxis.set_major_formatter(formatter)
+
+    ax.set_ylim(ymin=0)
 
     ax2.plot(df.Date_reported, df['MA_d'], color="blue", marker="", linestyle="solid", label="deaths (7-Tage Mittel)")
     ax2.set_ylabel("deaths", color="blue", fontsize=size)
+
+    # ax2.axis["right"].label.set_fontsize(size*0.5)
+    ax2.tick_params(labelsize=size*0.5)
+    # for tick in ax2.get_major_ticks():
+    #     tick.label.set_fontsize(size * 0.5)
+
     plt.title(f'{name_country} (WHO-Daten) - ({factor_cases_deaths} cases/death)\n', fontsize=size)
     plt.legend(loc='upper left',
                bbox_to_anchor=(0.5, -0.15),
@@ -160,6 +173,7 @@ def chart_cases(df, name_country, number_cases, factor_cases_deaths):
                shadow=True,
                ncol=2,
                fontsize=size)
+
     plt.suptitle(today + ' PW', fontsize=size * 0.7, y=0.92)
     plt.savefig(Laufwerk + pfad_output + number_cases + " cases " + name_country + ".png", dpi=dpi, bbox_inches='tight')
 
