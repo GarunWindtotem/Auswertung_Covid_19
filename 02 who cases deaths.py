@@ -69,27 +69,26 @@ dictCountries = {
     # "4": "Czechia",
     # "5": "Switzerland",
     # "6": "India",
-    # "7": "Italy",
-    # "8": "Spain",
+    "7": "Italy",
+    "8": "Spain",
     "9": "The United Kingdom",
-    # "10": "Israel",
+    "10": "Israel",
     # "11": "Sweden",
     # "12": "United States of America",
-    # "13": "Spain",
     # "14": "Italy",
-    # "15": "Russian Federation",
+    "15": "Russian Federation",
     # "16": "Estonia",
     "17": "Netherlands",
     # "18:": "Greece",
     # "19": "Denmark",
 }
 
-
-# # get list of all countries
+#
+# # # get list of all countries
 # listCountries = data["Country"].unique()
 # # create dict out of list
 # dictCountries = {i: listCountries[i] for i in range(0, len(listCountries))}
-# # print(dictCountries)
+# # # print(dictCountries)
 
 
 # Dataframes erzeugen
@@ -113,15 +112,15 @@ def create_df(i):
     Kopplung = "no Value"
 
     Zeitpunkt22C = float(df["MA"].iloc[-22])
-    print(f'Zeitpunkt22C {Zeitpunkt22C} {df["Date_reported"].iloc[-22]}')
     Zeitpunkt20C = float(df["MA"].iloc[-20])
-    print(f'Zeitpunkt20C {Zeitpunkt20C} {df["Date_reported"].iloc[-20]}')
     Zeitpunkt18C = float(df["MA"].iloc[-18])
-    print(f'Zeitpunkt18C {Zeitpunkt18C} {df["Date_reported"].iloc[-18]}')
-
     Zeitpunkt7D = float(df["MA_d"].iloc[-7])
-    print(f'Zeitpunkt7D {Zeitpunkt7D} {df["Date_reported"].iloc[-7]}')
     Zeitpunkt1D = float(df["MA_d"].iloc[-1])
+
+    print(f'Zeitpunkt22C {Zeitpunkt22C} {df["Date_reported"].iloc[-22]}')
+    print(f'Zeitpunkt20C {Zeitpunkt20C} {df["Date_reported"].iloc[-20]}')
+    print(f'Zeitpunkt18C {Zeitpunkt18C} {df["Date_reported"].iloc[-18]}')
+    print(f'Zeitpunkt7D {Zeitpunkt7D} {df["Date_reported"].iloc[-7]}')
     print(f'Zeitpunkt1D {Zeitpunkt1D} {df["Date_reported"].iloc[-1]}')
 
     if Zeitpunkt1D > Zeitpunkt7D:
@@ -135,9 +134,9 @@ def create_df(i):
         SteigungC = False
 
     if SteigungD is True and SteigungC is True:
-        Kopplung = "D an C gekoppelt"
+        Kopplung = "(Kopplung)"
     else:
-        Kopplung = "D NICHT an C gekoppelt"
+        Kopplung = "(keine Kopplung)"
 
     try:
         number_cases = str(round(df["MA"].iloc[-1], 0))
