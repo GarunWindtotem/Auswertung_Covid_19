@@ -33,7 +33,7 @@ df["Erstimpfung_cumsum"] = df["Erstimpfung"].cumsum()
 df["Zweitimpfung_cumsum"] = df["Zweitimpfung"].cumsum()
 
 
-def y_axis_thousands(x):
+def y_axis_thousands(x, pos):
     # 'The two args are the value and tick position'
     return '{:0,d}'.format(int(x)).replace(",", ".")
 
