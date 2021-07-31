@@ -27,11 +27,24 @@ df = pd.read_csv("D:\\Github\\Auswertung_Covid_19\\input\\Impfungen_Timeseries.c
 
 # Berechnungen
 df['Datum'] = pd.to_datetime(df['Datum'], format='%d.%m.%Y', utc=True)
-df["Erstimpfung_MA"] = df["Erstimpfung"].rolling(window=7, center=True, min_periods=7).mean()
-df["Zweitimpfung_MA"] = df["Zweitimpfung"].rolling(window=7, center=True, min_periods=7).mean()
+df["Erstimpfung_MA"] = df["Erstimpfung"].rolling(window=7, center=False, min_periods=7).mean()
+df["Zweitimpfung_MA"] = df["Zweitimpfung"].rolling(window=7, center=False, min_periods=7).mean()
 df["Erstimpfung_cumsum"] = df["Erstimpfung"].cumsum()
 df["Zweitimpfung_cumsum"] = df["Zweitimpfung"].cumsum()
 
+df.to_csv("df export.csv")
+
+ZweitimpfungenSumme = df["Zweitimpfung_cumsum"].iloc[-1]
+ZweitimpfungenZiel85 = 83_000_000*0.85
+ZweitimpfungenOffen = ZweitimpfungenZiel85 - ZweitimpfungenSumme
+ZweitimpfungenProTag = df["Zweitimpfung_MA"].iloc[-1]
+AnzahlTage85 = int(ZweitimpfungenOffen/ZweitimpfungenProTag)
+
+print(f'ZweitimpfungenSumme = {ZweitimpfungenSumme}')
+print(f'ZweitimpfungenZiel85 = {ZweitimpfungenZiel85}')
+print(f'ZweitimpfungenOffen = {ZweitimpfungenOffen}')
+print(f'ZweitimpfungenProTag = {ZweitimpfungenProTag}')
+print(f'AnzahlTage85 = {AnzahlTage85}')
 
 def y_axis_thousands(x, pos):
     # 'The two args are the value and tick position'
@@ -66,7 +79,11 @@ plt.yticks(fontsize=size * 0.7)
 plt.ylabel('Anzahl Impfungen', fontsize=size)
 plt.xlabel('Zeit', fontsize=size)
 
-plt.title('Anzahl Impfungen (RKI-Daten)\n', fontsize=size + 10)
+if df["Zweitimpfung_MA"].iloc[-7] < df["Zweitimpfung_MA"].iloc[-1]:
+    plt.title(f'Anzahl Impfungen (RKI-Daten) - 85% in < {AnzahlTage85} Tagen\n', fontsize=size + 10)
+else:
+    plt.title(f'Anzahl Impfungen (RKI-Daten) - 85% in > {AnzahlTage85} Tagen\n', fontsize=size + 10)
+
 plt.suptitle(today + ' PW', fontsize=size - 5, y=0.91)
 
 # # fill area between lines
@@ -114,4 +131,4 @@ ax2.tick_params(labelsize=size * 0.7)
 
 plt.savefig("D:\\Github\\Auswertung_Covid_19\\output\\Impfungen TS.png", dpi=dpi, bbox_inches='tight')
 
-plt.show()
+# plt.show()
