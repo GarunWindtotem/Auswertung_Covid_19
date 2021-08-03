@@ -109,49 +109,49 @@ def create_df(i):
     df['UTG_deaths'] = df['MA_d'] - df['MSTD_deaths']
     df.to_csv(f'{Laufwerk}{pfad_output}//Dataframes//df_{dictCountries[i]}.csv')
 
-    Kopplung = "no Value"
+    # Kopplung = "no Value"
+    #
+    # Zeitpunkt22C = float(df["MA"].iloc[-22])
+    # Zeitpunkt20C = float(df["MA"].iloc[-20])
+    # Zeitpunkt18C = float(df["MA"].iloc[-18])
+    # Zeitpunkt7D = float(df["MA_d"].iloc[-7])
+    # Zeitpunkt1D = float(df["MA_d"].iloc[-1])
+    #
+    # print(f'Zeitpunkt22C {Zeitpunkt22C} {df["Date_reported"].iloc[-22]}')
+    # print(f'Zeitpunkt20C {Zeitpunkt20C} {df["Date_reported"].iloc[-20]}')
+    # print(f'Zeitpunkt18C {Zeitpunkt18C} {df["Date_reported"].iloc[-18]}')
+    # print(f'Zeitpunkt7D {Zeitpunkt7D} {df["Date_reported"].iloc[-7]}')
+    # print(f'Zeitpunkt1D {Zeitpunkt1D} {df["Date_reported"].iloc[-1]}')
+    #
+    # if Zeitpunkt1D > Zeitpunkt7D:
+    #     SteigungD = True
+    # else:
+    #     SteigungD = False
+    #
+    # if Zeitpunkt18C > Zeitpunkt20C > Zeitpunkt22C:
+    #     SteigungC = True
+    # else:
+    #     SteigungC = False
+    #
+    # if SteigungD is True and SteigungC is True:
+    #     Kopplung = "(Kopplung)"
+    # else:
+    #     Kopplung = "(keine Kopplung)"
+    #
+    # try:
+    #     number_cases = str(round(df["MA"].iloc[-1], 0))
+    chart_cases(df, name_country)
+    # except IndexError:
+    #     print("PW IndexError")
+    #     pass
+    # except UnboundLocalError:
+    #     print("PW: UnboundLocalError")
+    #     pass
 
-    Zeitpunkt22C = float(df["MA"].iloc[-22])
-    Zeitpunkt20C = float(df["MA"].iloc[-20])
-    Zeitpunkt18C = float(df["MA"].iloc[-18])
-    Zeitpunkt7D = float(df["MA_d"].iloc[-7])
-    Zeitpunkt1D = float(df["MA_d"].iloc[-1])
-
-    print(f'Zeitpunkt22C {Zeitpunkt22C} {df["Date_reported"].iloc[-22]}')
-    print(f'Zeitpunkt20C {Zeitpunkt20C} {df["Date_reported"].iloc[-20]}')
-    print(f'Zeitpunkt18C {Zeitpunkt18C} {df["Date_reported"].iloc[-18]}')
-    print(f'Zeitpunkt7D {Zeitpunkt7D} {df["Date_reported"].iloc[-7]}')
-    print(f'Zeitpunkt1D {Zeitpunkt1D} {df["Date_reported"].iloc[-1]}')
-
-    if Zeitpunkt1D > Zeitpunkt7D:
-        SteigungD = True
-    else:
-        SteigungD = False
-
-    if Zeitpunkt18C > Zeitpunkt20C > Zeitpunkt22C:
-        SteigungC = True
-    else:
-        SteigungC = False
-
-    if SteigungD is True and SteigungC is True:
-        Kopplung = "(Kopplung)"
-    else:
-        Kopplung = "(keine Kopplung)"
-
-    try:
-        number_cases = str(round(df["MA"].iloc[-1], 0))
-        chart_cases(df, name_country, number_cases, Kopplung)
-    except IndexError:
-        print("PW IndexError")
-        pass
-    except UnboundLocalError:
-        print("PW: UnboundLocalError")
-        pass
-
-    return df, name_country, number_cases, Kopplung
+    return df, name_country
 
 
-def chart_cases(df, name_country, number_cases, Kopplung):
+def chart_cases(df, name_country):
     def y_axis_thousands(x, pos):
         # 'The two args are the value and tick position'
         return '{:0,d}'.format(int(x)).replace(",", ".")
@@ -203,7 +203,7 @@ def chart_cases(df, name_country, number_cases, Kopplung):
     # for tick in ax2.get_major_ticks():
     #     tick.label.set_fontsize(size * 0.5)
 
-    plt.title(f'{name_country} - {Kopplung}  (WHO-Daten) \n', fontsize=size)
+    plt.title(f'{name_country}  (WHO-Daten) \n', fontsize=size)
     plt.legend(loc='upper left',
                bbox_to_anchor=(0.5, -0.15),
                fancybox=True,
@@ -212,7 +212,7 @@ def chart_cases(df, name_country, number_cases, Kopplung):
                fontsize=size)
     plt.suptitle(f'{today} PW',
                  fontsize=size * 0.7, y=0.92)
-    plt.savefig(Laufwerk + pfad_output + number_cases + " cases " + name_country + ".png", dpi=dpi, bbox_inches='tight')
+    plt.savefig(Laufwerk + pfad_output + " cases " + name_country + ".png", dpi=dpi, bbox_inches='tight')
 
 
 for i in dictCountries:
