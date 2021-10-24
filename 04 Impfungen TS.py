@@ -39,6 +39,7 @@ ZweitimpfungenZiel85 = 83_000_000*0.85
 ZweitimpfungenOffen = ZweitimpfungenZiel85 - ZweitimpfungenSumme
 ZweitimpfungenProTag = df["Zweitimpfung_MA"].iloc[-1]
 AnzahlTage85 = int(ZweitimpfungenOffen/ZweitimpfungenProTag)
+Impfquote = int(100*(ZweitimpfungenSumme/83_000_000))
 
 print(f'ZweitimpfungenSumme = {ZweitimpfungenSumme}')
 print(f'ZweitimpfungenZiel85 = {ZweitimpfungenZiel85}')
@@ -80,9 +81,9 @@ plt.ylabel('Anzahl Impfungen', fontsize=size)
 plt.xlabel('Zeit', fontsize=size)
 
 if df["Zweitimpfung_MA"].iloc[-7] < df["Zweitimpfung_MA"].iloc[-1]:
-    plt.title(f'Anzahl Impfungen (RKI-Daten) - 85% in < {AnzahlTage85} Tagen\n', fontsize=size + 10)
+    plt.title(f'Anzahl Impfungen (RKI-Daten) - Ist: {Impfquote}% -> 85% in < {AnzahlTage85} Tagen\n', fontsize=size + 7)
 else:
-    plt.title(f'Anzahl Impfungen (RKI-Daten) - 85% in > {AnzahlTage85} Tagen\n', fontsize=size + 10)
+    plt.title(f'Anzahl Impfungen (RKI-Daten) - Ist: {Impfquote}% -> 85% in > {AnzahlTage85} Tagen\n', fontsize=size + 7)
 
 plt.suptitle(today + ' PW', fontsize=size - 5, y=0.91)
 

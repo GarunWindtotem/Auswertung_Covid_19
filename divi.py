@@ -10,7 +10,7 @@ import os
 Programm_Name = "DIVI"
 
 Laufwerk = "D:\\"
-name_input = 'data-ovyiI.csv'
+name_input = 'data-UIdqI.csv'
 name_output_df = 'Dataframes\\df_divi2.csv'
 
 pfad_output = "Github\\Auswertung_Covid_19\\output\\"
@@ -153,24 +153,6 @@ x = now2 - now
 x = round(x.total_seconds(), 2)
 
 # Performance CSV einlesen
-d = pd.read_csv(Laufwerk + pfad_output + name_performance)
 
-# Neues Dateframe für die Performance definieren
-now = datetime.now()
-
-d2 = {'Date': [now],
-      'PC': [pc],
-      'Laufzeit_in_s': [x],
-      'Version': [Programm_Name]}
-
-# Datum Spalte formatieren
-df2 = pd.DataFrame(d2)
-df2['Date'] = df2['Date'].dt.strftime('%Y-%m-%d %r')
-
-# Performance mit dem CSV verbinden
-d = d.append(df2, ignore_index=True)
-
-# Datenexport Performance
-d.to_csv(Laufwerk + pfad_output + name_performance, index=False)
 
 print(f'performance {pc} = {x} seconds')
