@@ -31,6 +31,7 @@ df["Erstimpfung_MA"] = df["Erstimpfung"].rolling(window=7, center=False, min_per
 df["Zweitimpfung_MA"] = df["Zweitimpfung"].rolling(window=7, center=False, min_periods=7).mean()
 df["Erstimpfung_cumsum"] = df["Erstimpfung"].cumsum()
 df["Zweitimpfung_cumsum"] = df["Zweitimpfung"].cumsum()
+df["Ziel"] = 83_000_000*0.85
 
 df.to_csv("df export.csv")
 
@@ -41,6 +42,7 @@ ZweitimpfungenProTag = df["Zweitimpfung_MA"].iloc[-1]
 AnzahlTage85 = int(ZweitimpfungenOffen/ZweitimpfungenProTag)
 Impfquote = int(100*(ZweitimpfungenSumme/83_000_000))
 
+print(f'Impfquote = {Impfquote}')
 print(f'ZweitimpfungenSumme = {ZweitimpfungenSumme}')
 print(f'ZweitimpfungenZiel85 = {ZweitimpfungenZiel85}')
 print(f'ZweitimpfungenOffen = {ZweitimpfungenOffen}')
@@ -92,7 +94,7 @@ plt.suptitle(today + ' PW', fontsize=size - 5, y=0.91)
 
 # Legende
 plt.legend(loc='upper right',
-           bbox_to_anchor=(0.5, -0.3),
+           bbox_to_anchor=(0.5, -0.1),
            fancybox=True,
            shadow=True,
            ncol=1,
@@ -114,13 +116,18 @@ plt.plot(df['Datum'], df['Erstimpfung_cumsum'], color="black", linestyle='-', li
          alpha=0.3,
          label="Erstimpfung (kumuliert)")  # blau, linie, dick
 
+plt.plot(df['Datum'], df['Ziel'], color="green", linestyle='-', linewidth=lwb,
+         marker="", markersize=size * 0.5,
+         alpha=0.3,
+         label="Ziel (kumulierte Impfungen)")
+
 plt.plot(df['Datum'], df['Zweitimpfung_cumsum'], color="blue", linestyle='-', linewidth=lwb,
          marker="", markersize=size * 0.5,
          alpha=0.3,
          label="Zweitimpfung (kumuliert)")  # blau, linie, dick
 
 plt.legend(loc='upper left',
-           bbox_to_anchor=(0.5, -0.3),
+           bbox_to_anchor=(0.5, -0.1),
            fancybox=True,
            shadow=True,
            ncol=1,

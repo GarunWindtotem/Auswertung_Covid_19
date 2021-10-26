@@ -76,7 +76,7 @@ df_divi2['date'] = pd.to_datetime(df_divi2.date, utc=True)
 # ts = pd.to_datetime('2020-10-14', utc=True)
 
 print(datetime.today())
-ts_x = str(datetime.today() - timedelta(140))
+ts_x = str(datetime.today() - timedelta(400))
 ts = pd.to_datetime(ts_x, utc=True)
 print(ts)
 
