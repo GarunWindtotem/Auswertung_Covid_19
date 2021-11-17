@@ -29,8 +29,10 @@ df = pd.read_csv("D:\\Github\\Auswertung_Covid_19\\input\\Impfungen_Timeseries.c
 df['Datum'] = pd.to_datetime(df['Datum'], format='%d.%m.%Y', utc=True)
 df["Erstimpfung_MA"] = df["Erstimpfung"].rolling(window=7, center=False, min_periods=7).mean()
 df["Zweitimpfung_MA"] = df["Zweitimpfung"].rolling(window=7, center=False, min_periods=7).mean()
+df["Drittimpfung_MA"] = df["Drittimpfung"].rolling(window=7, center=False, min_periods=7).mean()
 df["Erstimpfung_cumsum"] = df["Erstimpfung"].cumsum()
 df["Zweitimpfung_cumsum"] = df["Zweitimpfung"].cumsum()
+df["Drittimpfung_cumsum"] = df["Drittimpfung"].cumsum()
 df["Ziel"] = 83_000_000*0.85
 
 df.to_csv("df export.csv")
@@ -75,6 +77,11 @@ plt.plot(df['Datum'], df['Erstimpfung_MA'], color="black", linestyle='-', linewi
 plt.plot(df['Datum'], df['Zweitimpfung_MA'], color="blue", linestyle='-', linewidth=lwb,
          marker="", markersize=size * 0.5,
          label="Zweitimpfung Mittelwert 7 Tage")  # blau, linie, dick
+
+plt.plot(df['Datum'], df['Drittimpfung_MA'], color="orange", linestyle='-', linewidth=lwb,
+         marker="", markersize=size * 0.5, alpha=1,
+         label="Drittimpfung Mittelwert 7 Tage")  # blau, linie, dick
+
 
 plt.xticks(fontsize=size * 0.7, rotation=0)
 plt.yticks(fontsize=size * 0.7)
@@ -125,6 +132,11 @@ plt.plot(df['Datum'], df['Zweitimpfung_cumsum'], color="blue", linestyle='-', li
          marker="", markersize=size * 0.5,
          alpha=0.3,
          label="Zweitimpfung (kumuliert)")  # blau, linie, dick
+
+plt.plot(df['Datum'], df['Drittimpfung_cumsum'], color="orange", linestyle='-', linewidth=lwb,
+         marker="", markersize=size * 0.5,
+         alpha=0.3,
+         label="Drittimpfung (kumuliert)")  # blau, linie, dick
 
 plt.legend(loc='upper left',
            bbox_to_anchor=(0.5, -0.1),
